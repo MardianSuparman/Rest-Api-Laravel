@@ -12,6 +12,8 @@ class Film extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['judul', 'deskripsi', 'foto', 'url_vidio', 'id_kategori'];
+
     public function kategori (){
         return $this->belongsTo(Kategori::class, 'id_kategori');
     }
@@ -21,6 +23,6 @@ class Film extends Model
     }
 
     public function aktor (){
-        return $this->belongsToMany(Aktor::class,'genre_film', 'id_film', 'id_aktor');
+        return $this->belongsToMany(Aktor::class,'aktor_film', 'id_film', 'id_aktor');
     }
 }

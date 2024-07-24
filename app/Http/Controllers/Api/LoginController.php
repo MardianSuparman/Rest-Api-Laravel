@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Validator;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -55,6 +57,31 @@ class LoginController extends Controller
             'status'=> true,
             'message'=> 'Logut Berhasil'
         ], 200);
+    }
+
+    public function register(Request $request){
+        $validate = validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email'=> 'required|string|max:255|unique:users',
+            'password'=> 'required|string|min:8',
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json($validate->errors(), 400);
+        }
+
+        $user = User::create([
+            'name'=> $request->name,
+            'email'=> $request->email,
+            'password'=> Hash::make($request->password),
+        ]);
+
+        return response()->json([
+            // 'status'=> true,
+            'data' => $user,
+            'success' => true,
+            'message' => 'User Berhasil Dibuat'
+        ]);
     }
 
 }
